@@ -1,0 +1,47 @@
+Question 2
+What is the code doing and explain the rational and one use case you can think of
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef enum {
+    STATE_INIT,
+    STATE_RUNNING,
+    STATE_STOPPED,
+    STATE_ERROR,
+    NUM_STATES
+} State;
+
+typedef State (*StateFunction)(void);
+
+State initState() {
+    printf("Initializing...\n");
+    return STATE_RUNNING;
+}
+
+State runningState() {
+    printf("Running...\n");
+    // Conditional logic to transition to error state
+    return (rand() % 2) ? STATE_ERROR : STATE_STOPPED;
+}
+
+State stoppedState() {
+    printf("Stopped.\n");
+    return STATE_STOPPED;
+}
+
+State errorState() {
+    printf("Error occurred.\n");
+    return STATE_INIT; 
+}
+
+StateFunction stateFunctions[NUM_STATES] = {initState, runningState, stoppedState, errorState};
+
+int main() {
+    State currentState = STATE_INIT;
+    while(currentState != STATE_STOPPED) {
+        currentState = stateFunctions[currentState]();
+    }
+    printf("Exiting state machine.\n");
+    return 0;
+}
